@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ownership & Accountability — Bộ Kiểm Chứng Elite</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0e0f14;
+  --surface:#161820;
+  --surface2:#1e2029;
+  --border:#2a2d3a;
+  --gold:#c9a84c;
+  --gold-light:#e2c47a;
+  --gold-dim:#7a6230;
+  --text:#e8e6df;
+  --text-dim:#9896a0;
+  --text-muted:#5a5870;
+  --red:#d45555;
+  --green:#5aaa7a;
+  --blue:#5a8aaa;
+  --accent1:#8a6abd;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")}
+#app{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:20px 20px 60px}
+
+/* INTRO */
+.intro-wrap{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:40px 0}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.1);border:1px solid var(--gold-dim);border-radius:50px;padding:6px 16px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:28px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,68px);font-weight:700;line-height:1.1;margin-bottom:24px}
+.intro-title span{color:var(--gold)}
+.intro-subtitle{font-size:16px;color:var(--text-dim);max-width:580px;margin-bottom:40px;line-height:1.8}
+.intro-pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:40px}
+.pillar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
+.pillar-icon{font-size:22px;flex-shrink:0}
+.pillar-name{font-size:12px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.pillar-desc{font-size:12px;color:var(--text-dim);line-height:1.5}
+.intro-meta{display:flex;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim)}
+.meta-item svg{color:var(--gold)}
+.btn-start{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#0e0f14;font-weight:600;font-size:15px;padding:16px 36px;border-radius:50px;border:none;cursor:pointer;transition:all .25s;letter-spacing:.5px}
+.btn-start:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.3)}
+.btn-start svg{transition:transform .25s}
+.btn-start:hover svg{transform:translateX(4px)}
+.intro-quote{margin-top:48px;padding:20px 24px;border-left:3px solid var(--gold-dim);background:rgba(201,168,76,.04)}
+.intro-quote p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--text-dim);line-height:1.7}
+.intro-quote cite{font-size:12px;color:var(--text-muted);margin-top:8px;display:block;text-transform:uppercase;letter-spacing:1px}
+
+/* PROGRESS */
+.progress-wrap{position:sticky;top:0;z-index:10;background:rgba(14,15,20,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0;margin:0 -20px;padding:14px 20px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-label{font-size:12px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase}
+.progress-count{font-size:12px;color:var(--gold);font-weight:600}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width .4s ease}
+
+/* SECTION */
+.section-header{padding:48px 0 32px}
+.section-num{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,4vw,36px);font-weight:700;margin-bottom:12px}
+.section-desc{font-size:14px;color:var(--text-dim);max-width:540px;line-height:1.7}
+.section-tag{display:inline-block;padding:4px 12px;border-radius:4px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:16px}
+.tag-ownership{background:rgba(90,138,170,.15);color:var(--blue);border:1px solid rgba(90,138,170,.3)}
+.tag-accountability{background:rgba(138,106,189,.15);color:var(--accent1);border:1px solid rgba(138,106,189,.3)}
+
+/* QUESTION */
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:16px;transition:border-color .2s}
+.q-card.answered{border-color:var(--gold-dim)}
+.q-card.reverse-q::before{content:'↔ Câu nghịch chiều';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:10px}
+.q-num{font-size:11px;color:var(--text-muted);margin-bottom:8px;letter-spacing:1px}
+.q-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px}
+.q-scale{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.scale-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:8px;width:100%}
+.scale-btns{display:flex;gap:8px;width:100%}
+.scale-btn{flex:1;height:44px;border-radius:10px;border:1.5px solid var(--border);background:transparent;cursor:pointer;color:var(--text-dim);font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .18s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
+.scale-btn span.lbl{font-size:9px;font-weight:400;color:var(--text-muted);letter-spacing:.5px;display:none}
+.scale-btn:hover{border-color:var(--gold-dim);color:var(--gold);background:rgba(201,168,76,.07)}
+.scale-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.15);color:var(--gold)}
+.scale-btn[data-val="1"].selected{border-color:var(--red);background:rgba(212,85,85,.12);color:var(--red)}
+.scale-btn[data-val="2"].selected{border-color:#c4784a;background:rgba(196,120,74,.1);color:#c4784a}
+.scale-btn[data-val="3"].selected{border-color:var(--text-muted);background:rgba(150,150,170,.1);color:var(--text-dim)}
+.scale-btn[data-val="4"].selected{border-color:#7aaa5a;background:rgba(122,170,90,.1);color:#7aaa5a}
+.scale-btn[data-val="5"].selected{border-color:var(--green);background:rgba(90,170,122,.12);color:var(--green)}
+
+/* NAV */
+.q-nav{display:flex;justify-content:space-between;align-items:center;padding:32px 0;gap:16px}
+.btn-nav{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-nav:hover{border-color:var(--gold-dim);color:var(--gold)}
+.btn-next{background:var(--gold);border-color:var(--gold);color:#0e0f14;font-weight:600}
+.btn-next:hover{background:var(--gold-light);border-color:var(--gold-light);color:#0e0f14}
+.btn-next:disabled{background:var(--border);border-color:var(--border);color:var(--text-muted);cursor:not-allowed}
+.btn-next:disabled:hover{transform:none;box-shadow:none}
+.nav-hint{font-size:12px;color:var(--text-muted);text-align:center}
+
+/* RESULTS */
+.results-wrap{padding:40px 0}
+.results-hero{text-align:center;padding:48px 0 40px;position:relative}
+.results-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,168,76,.06) 0%,transparent 70%);pointer-events:none}
+.score-ring{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:28px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-inner{position:absolute;text-align:center}
+.score-big{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1}
+.score-max{font-size:14px;color:var(--text-muted);margin-top:4px}
+.score-pct{font-size:13px;color:var(--gold);font-weight:600;margin-top:2px}
+.band-label{display:inline-block;background:rgba(201,168,76,.1);border:1px solid var(--gold-dim);border-radius:50px;padding:6px 20px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.band-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:700;margin-bottom:12px}
+.band-summary{font-size:15px;color:var(--text-dim);max-width:540px;margin:0 auto;line-height:1.8}
+
+/* DIMENSIONS */
+.dims-grid{display:grid;gap:12px;margin:40px 0}
+.dim-row{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.dim-info{flex:1}
+.dim-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.dim-cat{font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.dim-bar-wrap{flex:0 0 160px}
+.dim-bar-bg{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.dim-bar-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.dim-score{flex:0 0 40px;text-align:right;font-size:13px;font-weight:600;color:var(--gold)}
+
+/* ADVICE */
+.advice-section{margin:40px 0}
+.advice-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.advice-subtitle{font-size:14px;color:var(--text-dim);margin-bottom:28px}
+.advice-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.advice-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.advice-card:nth-child(1)::before{background:var(--gold)}
+.advice-card:nth-child(2)::before{background:var(--blue)}
+.advice-card:nth-child(3)::before{background:var(--accent1)}
+.advice-num{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.advice-card-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--gold)}
+.advice-card:nth-child(2) .advice-card-title{color:var(--blue)}
+.advice-card:nth-child(3) .advice-card-title{color:var(--accent1)}
+.advice-body{font-size:14px;color:var(--text-dim);line-height:1.85}
+.advice-body strong{color:var(--text);font-weight:600}
+.advice-body em{font-style:italic;color:var(--text-muted)}
+.action-box{background:var(--surface2);border-radius:8px;padding:14px 16px;margin-top:14px;border-left:3px solid var(--border)}
+.action-box .action-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
+.action-box p{font-size:13px;color:var(--text)}
+
+/* PROFILE */
+.profile-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin:40px 0}
+.profile-title{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:20px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.profile-item{padding:14px;background:var(--surface2);border-radius:10px}
+.profile-item-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.profile-item-val{font-size:15px;font-weight:600;color:var(--text)}
+.profile-item-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+.btn-restart{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1.5px solid var(--border);color:var(--text-dim);padding:12px 24px;border-radius:50px;cursor:pointer;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all .2s;margin-top:40px}
+.btn-restart:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+.hidden{display:none!important}
+.fade-in{animation:fadeUp .4s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* PARTICIPANT FORM */
+.participant-wrap{min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:40px 0}
+.participant-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;max-width:520px}
+.participant-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;margin-bottom:8px}
+.participant-desc{font-size:14px;color:var(--text-dim);margin-bottom:28px;line-height:1.7}
+.field-group{margin-bottom:18px}
+.field-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;display:block}
+.field-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:13px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:var(--gold-dim)}
+.field-input::placeholder{color:var(--text-muted)}
+.field-note{font-size:12px;color:var(--text-muted);margin-top:6px}
+.btn-begin{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:#0e0f14;font-weight:600;font-size:15px;padding:14px 32px;border-radius:50px;border:none;cursor:pointer;transition:all .25s;margin-top:8px;font-family:'DM Sans',sans-serif}
+.btn-begin:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-begin:disabled{background:var(--border);color:var(--text-muted);cursor:not-allowed;transform:none}
+
+/* SUBMISSION STATUS */
+.submit-status{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:10px;font-size:13px;margin-top:20px}
+.submit-status.sending{background:rgba(201,168,76,.08);border:1px solid var(--gold-dim);color:var(--gold)}
+.submit-status.success{background:rgba(90,170,122,.08);border:1px solid rgba(90,170,122,.3);color:var(--green)}
+.submit-status.error{background:rgba(212,85,85,.08);border:1px solid rgba(212,85,85,.3);color:var(--red)}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sending .status-dot{background:var(--gold);animation:pulse 1s infinite}
+.success .status-dot{background:var(--green)}
+.error .status-dot{background:var(--red)}
+
+/* MOBILE */
+@media(max-width:600px){
+  .intro-pillars{grid-template-columns:1fr}
+  .profile-grid{grid-template-columns:1fr}
+  .dim-bar-wrap{flex:0 0 100px}
+  .scale-btns{gap:5px}
+  .scale-btn{height:40px;font-size:13px}
+  .advice-card{padding:20px}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div id="app">
+
+<!-- INTRO -->
+<div id="screen-intro" class="intro-wrap fade-in">
+  <div class="badge"><span class="badge-dot"></span>Self-Assessment · Leadership</div>
+  <h1 class="intro-title">Ownership &<br><span>Accountability</span><br>Elite Assessment</h1>
+  <p class="intro-subtitle">Bộ đánh giá hành vi chuyên sâu — được tổng hợp từ tinh hoa tri thức của Covey, Allen, Clear, Robbins & Sharma — giúp bạn đo lường chính xác mức độ làm chủ bản thân và trách nhiệm giải trình trong thực chiến lãnh đạo.</p>
+  <div class="intro-pillars">
+    <div class="pillar"><span class="pillar-icon">🎯</span><div><div class="pillar-name">32 câu hỏi đa chiều</div><div class="pillar-desc">Câu xuôi & nghịch chiều để bóc tách hành vi thực sự</div></div></div>
+    <div class="pillar"><span class="pillar-icon">🔬</span><div><div class="pillar-name">8 chiều đánh giá</div><div class="pillar-desc">Từ tư duy đến ngôn ngữ, từ cam kết đến ảnh hưởng người khác</div></div></div>
+    <div class="pillar"><span class="pillar-icon">📊</span><div><div class="pillar-name">Báo cáo cá nhân</div><div class="pillar-desc">Phân tích điểm mạnh & điểm yếu theo từng chiều</div></div></div>
+    <div class="pillar"><span class="pillar-icon">🛠</span><div><div class="pillar-name">Lời tư vấn thực chiến</div><div class="pillar-desc">3 hành động cụ thể, khả thi để nâng tầm ngay hôm nay</div></div></div>
+  </div>
+  <div class="intro-meta">
+    <span class="meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ~10 phút</span>
+    <span class="meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Bảo mật — không gửi dữ liệu</span>
+    <span class="meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Thang 1-5 · Tổng điểm 160</span>
+  </div>
+  <button class="btn-start" onclick="startAssessment()">Bắt đầu đánh giá <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  <div class="intro-quote">
+    <p>"The most important thing is to keep the most important thing the most important thing — and to be accountable for it, without exception."</p>
+    <cite>— Stephen R. Covey</cite>
+  </div>
+</div>
+
+<!-- PARTICIPANT INFO -->
+<div id="screen-participant" class="hidden participant-wrap fade-in">
+  <div class="participant-card">
+    <div class="badge" style="margin-bottom:20px"><span class="badge-dot"></span>Bước 1 / 9 — Thông tin người làm</div>
+    <h2 class="participant-title">Trước khi bắt đầu</h2>
+    <p class="participant-desc">Thông tin này giúp Trang theo dõi ai đã làm và so sánh kết quả theo nhóm. Dữ liệu chỉ dùng cho mục đích training — không chia sẻ bên ngoài.</p>
+    <div class="field-group">
+      <label class="field-label">Họ và tên *</label>
+      <input class="field-input" id="p-name" type="text" placeholder="Nguyễn Văn A" oninput="validateParticipant()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Email *</label>
+      <input class="field-input" id="p-email" type="email" placeholder="vana@company.com" oninput="validateParticipant()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Phòng ban / Nhóm</label>
+      <input class="field-input" id="p-dept" type="text" placeholder="Ví dụ: SPD, YKK Team A...">
+      <div class="field-note">Không bắt buộc — giúp lọc kết quả theo nhóm trong báo cáo</div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Chức danh / Cấp bậc</label>
+      <input class="field-input" id="p-role" type="text" placeholder="Ví dụ: Supervisor, Staff, Manager...">
+    </div>
+    <button class="btn-begin" id="btn-begin" onclick="beginAssessment()" disabled>
+      Bắt đầu làm bài 
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div id="screen-assessment" class="hidden">
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label" id="prog-section">Phần I — Ownership</span>
+      <span class="progress-count" id="prog-count">0/32</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div id="section-content"></div>
+  <div class="q-nav">
+    <button class="btn-nav" id="btn-prev" onclick="prevSection()">← Quay lại</button>
+    <span class="nav-hint" id="nav-hint"></span>
+    <button class="btn-nav btn-next" id="btn-next" onclick="nextSection()">Tiếp theo →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="hidden results-wrap fade-in"></div>
+
+</div>
+
+<script>
+// ── CONFIG: Dán Web App URL của Google Apps Script vào đây ──
+const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz85bCs-ETpBIln3hIMe5pEJ_XqMg5-NRjW0QxKI6U77KCWUm3MXSwOSbO8zoKrO8N72w/exec';
+
+const QUESTIONS = [
+  // D1: Tư duy Chủ nhân vs Nạn nhân
+  {d:0, reverse:false, text:"Khi kết quả công việc không như kỳ vọng, phản ứng đầu tiên của tôi là nhìn lại bản thân: tôi đã làm gì sai và có thể làm khác đi như thế nào."},
+  {d:0, reverse:true,  text:"Khi một dự án thất bại, tôi thường nghĩ đến các yếu tố bên ngoài (đồng nghiệp, thị trường, nguồn lực thiếu) trước khi nhìn lại chính mình."},
+  {d:0, reverse:false, text:"Tôi xem mỗi thử thách khó khăn là cơ hội để thể hiện năng lực, không phải là gánh nặng thêm được đặt lên vai mình."},
+  {d:0, reverse:true,  text:"Tôi có xu hướng chờ người khác đưa ra giải pháp hoặc cho chỉ đạo trước khi bản thân bắt đầu hành động."},
+
+  // D2: Chủ động hành động
+  {d:1, reverse:false, text:"Khi nhận thấy một vấn đề trong tổ chức, dù không hoàn toàn thuộc phạm vi công việc của mình, tôi vẫn lên tiếng hoặc đề xuất hướng xử lý."},
+  {d:1, reverse:false, text:"Tôi không cần ai yêu cầu mới bắt đầu cải thiện quy trình, kỹ năng hay chất lượng đầu ra của mình."},
+  {d:1, reverse:true,  text:'Tôi chủ yếu làm những gì nằm trong mô tả công việc (JD) của mình, không mấy khi chủ động vượt ra ngoài giới hạn đó.'},
+  {d:1, reverse:false, text:"Khi có khoảng trống trong công việc — không ai nhận nhiệm vụ đó — tôi tự nguyện đứng ra đảm nhận thay vì chờ ai đó được phân công."},
+
+  // D3: Làm chủ kết quả
+  {d:2, reverse:false, text:"Tôi chủ động theo dõi tiến độ công việc đã cam kết mà không cần sếp hoặc đồng nghiệp nhắc nhở."},
+  {d:2, reverse:false, text:"Tôi nhận thức rõ khi kết quả của mình ảnh hưởng đến người khác — dù tích cực hay tiêu cực — và chủ động xử lý hậu quả."},
+  {d:2, reverse:true,  text:"Nếu tôi đã nỗ lực hết mình nhưng kết quả vẫn kém, tôi cảm thấy mình không cần phải chịu trách nhiệm về kết quả đó nữa."},
+  {d:2, reverse:false, text:"Tôi thấy rõ sợi dây kết nối giữa hành động hàng ngày của mình và kết quả cuối cùng của nhóm/tổ chức."},
+
+  // D4: Ngôn ngữ & Tư duy
+  {d:3, reverse:false, text:"Trong các cuộc họp xử lý vấn đề, tôi dùng ngôn ngữ 'Chúng ta có thể làm gì?' nhiều hơn là 'Tại sao việc này xảy ra?'"},
+  {d:3, reverse:true,  text:'Khi nói về thất bại, tôi thường dùng cụm từ như "do hoàn cảnh", "vì họ không...", "bởi vì không có điều kiện..." để giải thích.'},
+  {d:3, reverse:false, text:"Tôi nhận ra sự khác biệt rõ ràng giữa 'giải thích' (explanation) và 'biện hộ' (excuse) — và tôi chọn cách đầu tiên khi nói về kết quả của mình."},
+  {d:3, reverse:true,  text:"Khi bị hỏi thẳng 'Bạn sẽ cụ thể làm gì khác đi lần sau?', tôi cảm thấy không thoải mái và khó trả lời ngay."},
+
+  // D5: Cam kết & Giữ lời
+  {d:4, reverse:false, text:"Khi tôi hứa 'Tôi sẽ hoàn thành vào thứ Sáu', tôi luôn giữ đúng cam kết hoặc chủ động thông báo trước nếu có thay đổi."},
+  {d:4, reverse:false, text:"Tôi ưu tiên những việc mình đã cam kết với người khác ngang bằng — thậm chí hơn — những mục tiêu tôi tự đặt ra cho bản thân."},
+  {d:4, reverse:true,  text:"Tôi có xu hướng dễ đồng ý khi được yêu cầu, nhưng sau đó thường trễ hạn hoặc quên thực hiện."},
+  {d:4, reverse:false, text:"Khi nhận ra mình không thể giữ cam kết, tôi thông báo ngay cho người liên quan — không phải chờ đến lúc deadline đã qua."},
+
+  // D6: Minh bạch & Trung thực
+  {d:5, reverse:false, text:"Tôi chủ động chia sẻ thông tin xấu (kết quả dưới kỳ vọng, rủi ro phát sinh) với quản lý hoặc nhóm sớm hơn là chờ bị hỏi."},
+  {d:5, reverse:false, text:"Khi tôi mắc lỗi, tôi trình bày rõ ràng: điều gì đã xảy ra, lỗi của tôi ở đâu, và tôi sẽ làm gì để khắc phục — không rút gọn hay né tránh."},
+  {d:5, reverse:true,  text:"Tôi có xu hướng trình bày vấn đề theo cách có lợi cho bản thân hơn là nói thẳng sự thật trong mọi tình huống."},
+  {d:5, reverse:false, text:"Tôi cảm thấy thoải mái khi nói 'Tôi không biết' hoặc 'Tôi đã sai' trước mặt sếp, đồng nghiệp hoặc cấp dưới của mình."},
+
+  // D7: Học hỏi từ thất bại
+  {d:6, reverse:false, text:"Sau mỗi sự việc quan trọng — thành công hay thất bại — tôi tự đặt câu hỏi 'Mình học được gì?' và ghi chép lại cụ thể."},
+  {d:6, reverse:false, text:"Tôi hiếm khi lặp lại cùng một sai lầm quá hai lần trong cùng một bối cảnh công việc."},
+  {d:6, reverse:true,  text:"Khi ai đó chỉ ra điểm yếu hoặc lỗi của tôi, phản ứng đầu tiên của tôi thường là giải thích hoặc phòng thủ, không phải lắng nghe và ghi nhận."},
+  {d:6, reverse:false, text:"Tôi xem phản hồi (feedback) tiêu cực là dữ liệu quý giá để cải thiện — không phải sự tấn công vào cá nhân tôi."},
+
+  // D8: Yêu cầu trách nhiệm từ người khác
+  {d:7, reverse:false, text:"Khi đồng nghiệp hoặc cấp dưới không giữ cam kết, tôi nêu vấn đề trực tiếp với họ theo cách xây dựng — thay vì phàn nàn với bên thứ ba."},
+  {d:7, reverse:false, text:"Tôi tạo ra không gian tâm lý an toàn để mọi người trong nhóm dám nhận trách nhiệm về lỗi lầm mà không sợ bị trừng phạt hay phán xét."},
+  {d:7, reverse:true,  text:"Tôi thường né tránh các cuộc trò chuyện khó (difficult conversation) vì lo ngại ảnh hưởng đến mối quan hệ hoặc gây căng thẳng không cần thiết."},
+  {d:7, reverse:false, text:"Khi tôi cần đặt câu hỏi hoặc phê bình hành vi của người khác, tôi tập trung vào hành vi cụ thể và kết quả — không phán xét nhân cách hay tính cách của họ."},
+];
+
+const SECTIONS = [
+  {label:"Phần I — Ownership", tag:"ownership", title:"Tư duy Chủ nhân vs Nạn nhân", desc:"Bạn phản ứng với thất bại và thách thức như thế nào? Ai là người nắm quyền trong câu chuyện của bạn — bạn hay hoàn cảnh?", qs:[0,1,2,3]},
+  {label:"Phần I — Ownership", tag:"ownership", title:"Chủ động hành động & Sáng kiến", desc:"Bạn chờ đợi hay chủ động tạo ra thay đổi? Giới hạn trách nhiệm của bạn nằm ở JD hay ở tầm nhìn?", qs:[4,5,6,7]},
+  {label:"Phần I — Ownership", tag:"ownership", title:"Làm chủ kết quả đầu ra", desc:"Bạn kết nối hành động hàng ngày với kết quả cuối cùng như thế nào? Bạn theo dõi và chịu trách nhiệm về outcome ra sao?", qs:[8,9,10,11]},
+  {label:"Phần I — Ownership", tag:"ownership", title:"Ngôn ngữ & Kiến trúc tư duy", desc:"Ngôn ngữ bạn dùng phản ánh ai đang điều khiển cuộc sống của bạn. Câu hỏi hay câu đổ lỗi — bạn chọn cái nào?", qs:[12,13,14,15]},
+  {label:"Phần II — Accountability", tag:"accountability", title:"Cam kết & Giữ lời hứa", desc:"Lời nói của bạn có trọng lượng không? Khoảng cách giữa 'sẽ làm' và 'đã làm' trong cuộc sống bạn là bao xa?", qs:[16,17,18,19]},
+  {label:"Phần II — Accountability", tag:"accountability", title:"Minh bạch & Trung thực", desc:"Bạn có dũng cảm để nói sự thật — kể cả khi nó bất lợi cho mình? Sự minh bạch có phải là giá trị cốt lõi của bạn không?", qs:[20,21,22,23]},
+  {label:"Phần II — Accountability", tag:"accountability", title:"Học hỏi & Tăng trưởng từ thất bại", desc:"Bạn xử lý thất bại như dữ liệu hay như thứ cần giấu đi? Vòng lặp học hỏi của bạn hoạt động như thế nào?", qs:[24,25,26,27]},
+  {label:"Phần II — Accountability", tag:"accountability", title:"Yêu cầu trách nhiệm từ người khác", desc:"Accountability không chỉ là về bản thân bạn. Bạn có dũng cảm và kỹ năng để giữ tiêu chuẩn cho cả nhóm không?", qs:[28,29,30,31]},
+];
+
+const DIM_NAMES = [
+  "Tư duy Chủ nhân","Chủ động hành động","Làm chủ kết quả","Ngôn ngữ & Tư duy",
+  "Cam kết & Giữ lời","Minh bạch & Trung thực","Học hỏi từ thất bại","Yêu cầu TN người khác"
+];
+
+const BANDS = [
+  {min:32, max:64, label:"Người Quan Sát", emoji:"🌱",
+   summary:"Bạn đang ở giai đoạn khởi đầu của hành trình làm chủ bản thân. Hiện tại, tư duy và hành vi của bạn đang bị dẫn dắt nhiều bởi hoàn cảnh bên ngoài hơn là sự lựa chọn có ý thức từ bên trong. Đây là điểm xuất phát — không phải điểm kết thúc. Nhận ra mình đang ở đây đã là bước đầu tiên của Ownership thực sự.",
+   advice:[
+    {title:"Thực hành 'Bức Tường Câu Hỏi' — Đảo ngược phản xạ đổ lỗi",
+     body:"Phản xạ tự nhiên khi gặp thất bại là tìm nguyên nhân bên ngoài. Đây là cơ chế bảo vệ bản ngã bình thường của não bộ — nhưng nó đang cướp đi quyền năng của bạn. Covey gọi đây là khoảnh khắc chọn lựa giữa <strong>kích thích → phản ứng</strong>. Bài tập: Mỗi khi xảy ra tình huống không như ý, trước khi nói bất cứ điều gì, hãy viết ra: <em>'Trong tình huống này, tôi đã đóng góp vào vấn đề bằng cách nào — dù chỉ 10%?'</em>",
+     action:"Lấy 1 tình huống thất bại trong tuần qua. Viết ra giấy: (a) Điều gì đã xảy ra? (b) Phần của tôi trong đó là gì? (c) Tôi có thể đã làm gì khác? Làm 7 ngày liên tục — mỗi ngày 1 tình huống nhỏ. Sau 7 ngày, não bạn sẽ bắt đầu tự động đặt câu hỏi thay vì đổ lỗi."},
+    {title:"Cam kết nhỏ — Giữ lớn: Xây 'danh tính làm chủ' từ bằng chứng nhỏ",
+     body:"James Clear chỉ ra rằng identity không được xây từ quyết tâm lớn — nó được xây từ <strong>bằng chứng tích lũy</strong>. Mỗi lần bạn giữ một cam kết nhỏ, não bộ ghi nhận: <em>'Tôi là người giữ lời.'</em> Mỗi lần phá vỡ một cam kết nhỏ, não ghi nhận ngược lại. Phần lớn người ở band này đang vô tình xây danh tính tiêu cực qua hàng trăm cam kết nhỏ bị phá vỡ mỗi ngày.",
+     action:"Chọn 1 cam kết SIÊU NHỎ mỗi ngày — nhỏ đến mức không thể thất bại. Ví dụ: 'Tôi sẽ ghi lại 1 điều cần làm ngày mai vào 8h tối.' Giữ đúng 100% trong 21 ngày. Không tăng quy mô cho đến khi đạt 21 ngày liên tục. Đây không phải về năng suất — đây về xây danh tính."},
+    {title:"Phẫu thuật ngôn ngữ — Thay 'do/vì/tại' bằng 'tôi sẽ'",
+     body:"Tony Robbins nói: <em>'The words you choose shape the neural pathways that determine your behavior.'</em> Ngôn ngữ của người ở band này thường chứa nhiều từ tước đoạt quyền lực: 'do...', 'vì...', 'tại...', 'không có điều kiện...'. Những từ này không chỉ phản ánh tư duy — chúng <strong>duy trì và củng cố</strong> tư duy đó mỗi lần được dùng.",
+     action:"Trong 7 ngày tới: mỗi khi sắp nói một câu bắt đầu bằng 'do', 'vì', 'tại', hãy DỪNG và làm lại câu đó. Ví dụ: 'Tôi không gửi báo cáo vì bận' → 'Lần sau tôi sẽ thông báo trước 4 tiếng nếu sắp trễ deadline.' Nhờ 1 người thân hoặc đồng nghiệp tin tưởng nhắc bạn mỗi lần bạn dùng ngôn ngữ đổ lỗi."}
+   ]},
+  {min:65, max:96, label:"Người Phản Ứng", emoji:"⚡",
+   summary:"Bạn có nhận thức về Ownership & Accountability và thể hiện được ở nhiều tình huống — nhưng chưa nhất quán. Bạn mạnh khi thuận lợi, nhưng có xu hướng lùi bước khi áp lực cao hoặc khi cái giá của accountability trở nên đắt hơn. Thách thức của bạn không phải là thiếu kiến thức — mà là thiếu hệ thống để duy trì tiêu chuẩn cao khi điều kiện không lý tưởng.",
+   advice:[
+    {title:"Vòng lặp Hồi tưởng Tuần (Weekly Review) — Tạo nhịp điệu tự giải trình",
+     body:"David Allen gọi Weekly Review là <strong>'critical factor for success'</strong> — không phải vì nó tổ chức công việc, mà vì nó <em>tạo ra khoảnh khắc bạn đối mặt với sự thật về chính mình</em>. Người ở band này thường có nhận thức tốt nhưng thiếu vòng phản hồi có cấu trúc để chuyển nhận thức thành hành vi nhất quán.",
+     action:"Mỗi tối Chủ nhật, 30 phút, ngồi với 3 câu hỏi: (a) Tuần này tôi đã giữ bao nhiêu % cam kết đã đưa ra? (b) Tôi đã né tránh trách nhiệm ở điểm cụ thể nào? Tình huống nào? Với ai? (c) Tuần tới, 1 hành vi Ownership/Accountability cụ thể tôi cam kết cải thiện là gì? Ghi lại — không chỉ nghĩ. Xem lại tuần trước trước khi viết tuần này."},
+    {title:"Cam kết có thể đo lường — Thêm 3 yếu tố vào mọi lời hứa",
+     body:"Phần lớn cam kết thất bại không phải vì thiếu thiện chí — mà vì <strong>thiết kế kém</strong>. 'Tôi sẽ cải thiện kỹ năng này' là ý định, không phải cam kết. Accountability thực sự yêu cầu ba yếu tố: <em>thời hạn cụ thể + tiêu chí đo lường + người sẽ biết kết quả</em>. Khi thiếu bất kỳ yếu tố nào, não bộ tự động hạ mức độ nghiêm túc.",
+     action:"Từ hôm nay: mỗi khi bạn nói 'Tôi sẽ làm X', bắt buộc thêm: KQCẦN: [kết quả đo được] + DEADLINE: [ngày giờ cụ thể] + NGƯỜI BIẾT: [tên 1 người sẽ hỏi bạn kết quả]. Ví dụ: 'Tôi sẽ hoàn thành báo cáo → Báo cáo 5 trang, có phân tích số liệu → trước 17h thứ 5 → gửi cho anh A ngay khi xong.'"},
+    {title:"Cuộc trò chuyện khó đầu tiên — Phá băng né tránh",
+     body:"Né tránh difficult conversation là dấu hiệu cổ điển của accountability chưa trưởng thành. Robin Sharma nói: <em>'You don't actually protect a relationship by avoiding hard conversations — you just postpone and amplify the damage.'</em> Người ở band này thường biết cuộc trò chuyện nào cần có nhưng vẫn trì hoãn vì lo ngại căng thẳng ngắn hạn.",
+     action:"Ngay tuần này: xác định 1 người bạn đang né tránh phản hồi về 1 vấn đề cụ thể. Dùng công thức AID: <strong>A</strong>ction (Hành vi cụ thể tôi quan sát được: 'Khi anh/chị...') + <strong>I</strong>mpact (Ảnh hưởng cụ thể: 'Điều đó tác động đến... như thế này...') + <strong>D</strong>esired (Mong đợi cụ thể: 'Tôi muốn chúng ta thử cách...').Đặt lịch cuộc gặp đó trước 5 ngày nữa."}
+   ]},
+  {min:97, max:128, label:"Người Hành Động", emoji:"🔥",
+   summary:"Bạn có nền tảng mạnh về Ownership & Accountability ở cấp độ cá nhân. Bạn nhất quán, đáng tin cậy, và dũng cảm đối mặt với thực tế. Thách thức tiếp theo của bạn là bước sang cấp độ lãnh đạo: làm thế nào để lan tỏa văn hóa này ra xung quanh, xây dựng hệ thống thay vì chỉ dựa vào ý chí cá nhân, và trở thành người tạo ra Accountability — không chỉ thực hành nó.",
+   advice:[
+    {title:"Accountability Partner System — Nâng mình bằng người đồng hành",
+     body:"Ngay cả những người có accountability cao nhất thế giới — CEO, vận động viên Olympic, nhà khoa học hàng đầu — đều có accountability partner. Không phải vì họ yếu, mà vì <strong>external accountability nhân đôi cam kết nội tâm</strong>. Tony Robbins gọi đây là 'the most underutilized performance tool' dành cho lãnh đạo. Người ở band này thường đủ mạnh để không cần — nhưng chính sự tự mãn đó là điểm mù nguy hiểm nhất.",
+     action:"Tìm 1 người đồng hành (peer — không phải cấp dưới, không phải cấp trên) có tiêu chuẩn tương đương hoặc cao hơn bạn. Thiết lập check-in 2 tuần/lần, 45 phút, với cấu trúc cố định: [15'] Cam kết kỳ trước — kết quả thực tế — bài học rút ra. [15'] Thách thức Ownership/Accountability đang gặp. [15'] Cam kết 2 tuần tới + cách đo. Duy trì tối thiểu 3 tháng."},
+    {title:"Visible Scorecard — Xây văn hóa Accountability cho nhóm",
+     body:"Lãnh đạo thực sự không chỉ là người có accountability — mà là người <strong>thiết kế môi trường để người khác có accountability</strong>. Covey nói: <em>'You can't hold people accountable to something they don't clearly understand.'</em> Phần lớn nhóm thiếu accountability không phải vì lười biếng — mà vì không có hệ thống làm cho cam kết trở nên rõ ràng và có thể theo dõi.",
+     action:"Trong tuần tới, tạo 1 công cụ đơn giản (whiteboard, Google Sheet, hoặc Trello) với 4 cột cho mọi cam kết của nhóm: AI làm gì | Kết quả cụ thể là gì | Deadline | Cập nhật tiến độ. Không phải để kiểm soát — mà để tạo 'social contract' tự nhiên. Nghiên cứu cho thấy khi cam kết được ghi nhận công khai, tỷ lệ hoàn thành tăng 65%. Dẫn dắt bằng cách là người đầu tiên điền vào bảng."},
+    {title:"After Action Review (AAR) — Biến kinh nghiệm thành trí tuệ tổ chức",
+     body:"Phương pháp AAR được quân đội Mỹ dùng để xây dựng văn hóa accountability ở cấp độ đơn vị. Cốt lõi là: <strong>mọi sự kiện quan trọng đều chứa bài học — nhưng bài học chỉ có giá trị khi được chiết xuất có cấu trúc và được cam kết ứng dụng</strong>. Người ở band này thường học từ kinh nghiệm cá nhân tốt — nhưng chưa hệ thống hóa điều này cho cả nhóm.",
+     action:"Sau mỗi dự án/milestone quan trọng, dẫn dắt nhóm qua 4 câu hỏi (45-60 phút): (1) Điều gì đã xảy ra thực sự, không thêm bớt? (2) Điều gì đã đúng và TẠI SAO nó đúng? (3) Điều gì có thể làm tốt hơn — ai chịu trách nhiệm cụ thể? (4) Cam kết nào chúng ta đặt ra cho lần sau? Ghi biên bản, chia sẻ toàn nhóm trong 24h."}
+   ]},
+  {min:129, max:160, label:"Người Làm Chủ", emoji:"👑",
+   summary:"Bạn đang ở cấp độ élite về Ownership & Accountability. Đây là cấp độ mà phần lớn lãnh đạo dành cả sự nghiệp để hướng tới nhưng ít người đạt được một cách nhất quán. Thách thức của bạn không còn là về kỹ năng hay nhận thức cá nhân — mà là về legacy: làm thế nào để những gì bạn thể hiện trở thành văn hóa, hệ thống, và chuẩn mực mới cho tổ chức và những người xung quanh bạn.",
+   advice:[
+    {title:"Kiến trúc sư Accountability — Thiết kế hệ thống, không chỉ dẫn dắt bằng gương",
+     body:"Sharma nói: <em>'The business of the best leaders is not to be the most accountable person in the room — it is to design the room so that accountability becomes the default.'</em> Ở cấp độ của bạn, ảnh hưởng lớn nhất không còn đến từ việc bạn làm gì — mà từ <strong>những gì bạn thiết kế để xảy ra ngay cả khi bạn vắng mặt</strong>. Đây là sự khác biệt giữa lãnh đạo và kiến trúc sư văn hóa.",
+     action:"Trong tháng tới, thiết kế (và viết thành tài liệu) 3 'ritual accountability' cho tổ chức/nhóm của bạn: (1) Meeting ritual: mọi cuộc họp kết thúc với WHO/WHAT/WHEN rõ ràng và được ghi lại. (2) Failure ritual: quy trình xử lý lỗi chuẩn — không phán xét, chỉ học. (3) Celebration ritual: công nhận công khai khi ai đó thể hiện Ownership xuất sắc. Thiết kế, test, lặp lại."},
+    {title:"Coach Ownership — Dạy để củng cố và tìm thấy điểm mù của chính mình",
+     body:"Nghiên cứu về 'learning by teaching' cho thấy người dạy củng cố được 90% kiến thức so với 10% khi chỉ đọc. Nhưng với Ownership & Accountability, giá trị còn sâu hơn: <strong>khi bạn phải articulate và demonstrate điều này cho người khác, bạn sẽ phát hiện những blind spot của chính mình</strong> mà tự phản chiếu không bao giờ chạm tới được. Covey gọi đây là 'living into your principles by teaching them.'",
+     action:"Chọn 2 người trong nhóm đang ở giai đoạn đầu (Band 1-2 nếu họ cũng làm bài đánh giá này). Cam kết coaching 1-on-1 hàng tháng trong 3 tháng, tập trung vào 1 tình huống accountability thực tế của họ mỗi buổi. Dùng mô hình GROW: Goal (Cam kết cần đạt) → Reality (Thực tế hiện tại) → Options (Các lựa chọn) → Will (Hành động cụ thể). Sau mỗi buổi coaching, tự hỏi: 'Mình học được gì về chính mình từ buổi này?'"},
+    {title:"Extreme Ownership Audit Hàng Quý — Tìm vùng mù ở nơi bạn ít ngờ nhất",
+     body:"Jocko Willink — cựu Navy SEAL và tác giả Extreme Ownership — nói rằng <em>'the higher your ownership, the harder it becomes to see where you're not owning something.'</em> Người ở band này thường có vùng mù ở những mối quan hệ QUAN TRỌNG NHẤT (gia đình, cộng sự thân thiết, mentor) hoặc mục tiêu LỚN NHẤT (vì chúng đi kèm nỗi sợ lớn nhất). Accountability không có đích đến — nó có chiều sâu không giới hạn.",
+     action:"Mỗi quý (4 lần/năm), dành 1 buổi sáng một mình với 3 câu hỏi cứng nhất: (1) Điều gì tôi đang né tránh nhận trách nhiệm — mà tôi biết nhưng chưa thừa nhận? (2) Ai trong cuộc sống của tôi xứng đáng được tôi accountability hơn những gì tôi đang cho họ? (3) Mục tiêu nào tôi đang 'có kế hoạch' nhưng thực ra đang không có cam kết thực sự? Viết ra, không lưu trong đầu. Sau đó chọn 1 hành động bắt đầu trong 48 giờ."}
+   ]},
+];
+
+let currentSection = 0;
+let answers = new Array(32).fill(null);
+
+let participant = {name:'', email:'', dept:'', role:''};
+
+function startAssessment(){
+  document.getElementById('screen-intro').classList.add('hidden');
+  document.getElementById('screen-participant').classList.remove('hidden');
+  document.getElementById('screen-participant').classList.add('fade-in');
+}
+
+function validateParticipant(){
+  const name = document.getElementById('p-name').value.trim();
+  const email = document.getElementById('p-email').value.trim();
+  const valid = name.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  document.getElementById('btn-begin').disabled = !valid;
+}
+
+function beginAssessment(){
+  participant.name  = document.getElementById('p-name').value.trim();
+  participant.email = document.getElementById('p-email').value.trim();
+  participant.dept  = document.getElementById('p-dept').value.trim();
+  participant.role  = document.getElementById('p-role').value.trim();
+  document.getElementById('screen-participant').classList.add('hidden');
+  document.getElementById('screen-assessment').classList.remove('hidden');
+  renderSection();
+}
+
+function sendToGoogleSheets(payload){
+  if(!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') return;
+  const statusEl = document.getElementById('submit-status');
+  if(statusEl){
+    statusEl.className = 'submit-status sending';
+    statusEl.innerHTML = '<span class="status-dot"></span> Đang gửi kết quả lên hệ thống...';
+  }
+  fetch(SHEET_SCRIPT_URL, {
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    if(statusEl){
+      statusEl.className = 'submit-status success';
+      statusEl.innerHTML = '<span class="status-dot"></span> ✓ Kết quả đã được lưu thành công vào hệ thống';
+    }
+  }).catch(()=>{
+    if(statusEl){
+      statusEl.className = 'submit-status error';
+      statusEl.innerHTML = '<span class="status-dot"></span> ⚠ Không thể kết nối — vui lòng chụp màn hình kết quả và gửi lại';
+    }
+  });
+}
+
+function renderSection(){
+  const sec = SECTIONS[currentSection];
+  let html = `<div class="section-header fade-in">
+    <div class="section-num">${sec.label}</div>
+    <div class="section-tag tag-${sec.tag}">${sec.tag === 'ownership' ? '⬡ OWNERSHIP' : '⬡ ACCOUNTABILITY'}</div>
+    <h2 class="section-title">${sec.title}</h2>
+    <p class="section-desc">${sec.desc}</p>
+  </div>`;
+  sec.qs.forEach((qi, i) => {
+    const q = QUESTIONS[qi];
+    const answered = answers[qi] !== null;
+    html += `<div class="q-card ${answered?'answered':''} ${q.reverse?'reverse-q':''} fade-in" style="animation-delay:${i*0.07}s">
+      <div class="q-num">Câu ${qi+1} / 32</div>
+      <div class="q-text">${q.text}</div>
+      <div class="q-scale">
+        <div class="scale-labels"><span>Hoàn toàn không đúng</span><span>Luôn luôn đúng</span></div>
+        <div class="scale-btns">
+          ${[1,2,3,4,5].map(v=>`<button class="scale-btn ${answers[qi]===v?'selected':''}" data-val="${v}" onclick="setAnswer(${qi},${v},this)">${v}</button>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('section-content').innerHTML = html;
+  updateProgress();
+  updateNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setAnswer(qi, val, btn){
+  answers[qi] = val;
+  const card = btn.closest('.q-card');
+  card.classList.add('answered');
+  card.querySelectorAll('.scale-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateProgress();
+  updateNav();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a=>a!==null).length;
+  document.getElementById('prog-count').textContent = `${answered}/32`;
+  document.getElementById('prog-fill').style.width = `${(answered/32)*100}%`;
+  document.getElementById('prog-section').textContent = SECTIONS[currentSection].label;
+}
+
+function updateNav(){
+  const sec = SECTIONS[currentSection];
+  const sectionAnswered = sec.qs.every(qi=>answers[qi]!==null);
+  const btn = document.getElementById('btn-next');
+  const hint = document.getElementById('nav-hint');
+  const unanswered = sec.qs.filter(qi=>answers[qi]===null).length;
+  
+  if(sectionAnswered){
+    btn.disabled = false;
+    hint.textContent = currentSection < SECTIONS.length-1 ? 'Nhóm câu hỏi tiếp theo →' : '';
+    btn.textContent = currentSection < SECTIONS.length-1 ? 'Tiếp theo →' : 'Xem kết quả 🎯';
+  } else {
+    btn.disabled = true;
+    hint.textContent = `Còn ${unanswered} câu chưa trả lời`;
+  }
+  document.getElementById('btn-prev').style.visibility = currentSection === 0 ? 'hidden' : 'visible';
+}
+
+function nextSection(){
+  if(currentSection < SECTIONS.length-1){
+    currentSection++;
+    renderSection();
+  } else {
+    showResults();
+  }
+}
+
+function prevSection(){
+  if(currentSection > 0){
+    currentSection--;
+    renderSection();
+  }
+}
+
+function calcScore(){
+  let total = 0;
+  let dims = new Array(8).fill(0);
+  answers.forEach((val, i) => {
+    if(val===null) return;
+    const q = QUESTIONS[i];
+    const score = q.reverse ? (6-val) : val;
+    total += score;
+    dims[q.d] += score;
+  });
+  return {total, dims};
+}
+
+function showResults(){
+  document.getElementById('screen-assessment').classList.add('hidden');
+  const {total, dims} = calcScore();
+  const pct = Math.round((total/160)*100);
+  const band = BANDS.find(b=>total>=b.min && total<=b.max) || BANDS[BANDS.length-1];
+  
+  const isOwnership = (i) => i < 4;
+  const ownershipScore = dims.slice(0,4).reduce((a,b)=>a+b,0);
+  const accountabilityScore = dims.slice(4).reduce((a,b)=>a+b,0);
+
+  const circumference = 2 * Math.PI * 54;
+  const fillOffset = circumference - (pct/100)*circumference;
+  const scoreColor = total < 65 ? '#d45555' : total < 97 ? '#c4784a' : total < 129 ? '#7aaa5a' : '#c9a84c';
+
+  let dimRows = dims.map((s,i)=>{
+    const dpct = Math.round((s/20)*100);
+    const color = dpct < 40 ? '#d45555' : dpct < 60 ? '#c4784a' : dpct < 80 ? '#7aaa5a' : '#c9a84c';
+    return `<div class="dim-row">
+      <div class="dim-info">
+        <div class="dim-name">${DIM_NAMES[i]}</div>
+        <div class="dim-cat" style="color:${isOwnership(i)?'var(--blue)':'var(--accent1)'}">${isOwnership(i)?'Ownership':'Accountability'}</div>
+      </div>
+      <div class="dim-bar-wrap">
+        <div class="dim-bar-bg"><div class="dim-bar-fill" style="width:${dpct}%;background:${color}"></div></div>
+      </div>
+      <div class="dim-score">${s}/20</div>
+    </div>`;
+  }).join('');
+
+  let adviceCards = band.advice.map((a,i)=>`
+    <div class="advice-card fade-in" style="animation-delay:${0.1+i*0.15}s">
+      <div class="advice-num">Hành động ${i+1} / 3</div>
+      <div class="advice-card-title">${a.title}</div>
+      <div class="advice-body">${a.body}</div>
+      <div class="action-box">
+        <div class="action-label">▶ Bài tập thực chiến ngay hôm nay</div>
+        <p>${a.action}</p>
+      </div>
+    </div>`).join('');
+
+  const weakDim = dims.indexOf(Math.min(...dims));
+  const strongDim = dims.indexOf(Math.max(...dims));
+
+  document.getElementById('screen-results').innerHTML = `
+    <div class="results-hero">
+      <div class="score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="54" fill="none" stroke="var(--border)" stroke-width="8"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="${scoreColor}" stroke-width="8"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${fillOffset}"
+            stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease"/>
+        </svg>
+        <div class="score-ring-inner">
+          <div class="score-big">${total}</div>
+          <div class="score-max">/ 160</div>
+          <div class="score-pct">${pct}%</div>
+        </div>
+      </div>
+      <div class="band-label">${band.emoji} ${band.label}</div>
+      <h2 class="band-title">${band.label}</h2>
+      <p class="band-summary">${band.summary}</p>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-title">Phân tích nhanh</div>
+      <div class="profile-grid">
+        <div class="profile-item">
+          <div class="profile-item-label">Ownership (4 chiều)</div>
+          <div class="profile-item-val">${ownershipScore}/80 — ${Math.round(ownershipScore/80*100)}%</div>
+          <div class="profile-item-sub">${ownershipScore>=64?'Rất mạnh':ownershipScore>=48?'Tốt, còn room':ownershipScore>=32?'Cần cải thiện':'Ưu tiên hàng đầu'}</div>
+        </div>
+        <div class="profile-item">
+          <div class="profile-item-label">Accountability (4 chiều)</div>
+          <div class="profile-item-val">${accountabilityScore}/80 — ${Math.round(accountabilityScore/80*100)}%</div>
+          <div class="profile-item-sub">${accountabilityScore>=64?'Rất mạnh':accountabilityScore>=48?'Tốt, còn room':accountabilityScore>=32?'Cần cải thiện':'Ưu tiên hàng đầu'}</div>
+        </div>
+        <div class="profile-item">
+          <div class="profile-item-label">Chiều mạnh nhất</div>
+          <div class="profile-item-val">${DIM_NAMES[strongDim]}</div>
+          <div class="profile-item-sub">${dims[strongDim]}/20 điểm — Đây là nền tảng của bạn</div>
+        </div>
+        <div class="profile-item">
+          <div class="profile-item-label">Chiều cần cải thiện nhất</div>
+          <div class="profile-item-val">${DIM_NAMES[weakDim]}</div>
+          <div class="profile-item-sub">${dims[weakDim]}/20 điểm — Ưu tiên đầu tư vào đây</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dims-grid">${dimRows}</div>
+
+    <div class="advice-section">
+      <h3 class="advice-title">🛠 Lộ trình hành động của bạn</h3>
+      <p class="advice-subtitle">3 hành động cụ thể, thực chiến và khả thi ngay hôm nay — được thiết kế riêng cho dải điểm của bạn</p>
+      ${adviceCards}
+    </div>
+
+    <div id="submit-status" class="submit-status sending" style="max-width:520px;margin:0 auto 8px">
+      <span class="status-dot"></span> Đang gửi kết quả lên hệ thống...
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn-restart" onclick="restartAssessment()">↺ Làm lại từ đầu</button>
+    </div>
+  `;
+
+  document.getElementById('screen-results').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Send to Google Sheets
+  const payload = {
+    timestamp: new Date().toLocaleString('vi-VN'),
+    name: participant.name,
+    email: participant.email,
+    dept: participant.dept,
+    role: participant.role,
+    total_score: total,
+    percent: pct,
+    band: band.label,
+    ownership_score: ownershipScore,
+    accountability_score: accountabilityScore,
+    dim_1_tu_duy: dims[0],
+    dim_2_chu_dong: dims[1],
+    dim_3_ket_qua: dims[2],
+    dim_4_ngon_ngu: dims[3],
+    dim_5_cam_ket: dims[4],
+    dim_6_minh_bach: dims[5],
+    dim_7_hoc_hoi: dims[6],
+    dim_8_yeu_cau: dims[7],
+    strong_dim: DIM_NAMES[strongDim],
+    weak_dim: DIM_NAMES[weakDim]
+  };
+  sendToGoogleSheets(payload);
+
+  // Animate bars after render
+  setTimeout(()=>{
+    document.querySelectorAll('.dim-bar-fill').forEach(el=>{
+      const w = el.style.width;
+      el.style.width = '0';
+      requestAnimationFrame(()=>{ el.style.width = w; });
+    });
+  }, 100);
+}
+
+function restartAssessment(){
+  answers = new Array(32).fill(null);
+  currentSection = 0;
+  participant = {name:'', email:'', dept:'', role:''};
+  document.getElementById('screen-results').classList.add('hidden');
+  document.getElementById('screen-results').innerHTML = '';
+  document.getElementById('screen-participant').classList.add('hidden');
+  document.getElementById('p-name').value='';
+  document.getElementById('p-email').value='';
+  document.getElementById('p-dept').value='';
+  document.getElementById('p-role').value='';
+  document.getElementById('btn-begin').disabled = true;
+  document.getElementById('screen-intro').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
