@@ -275,7 +275,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'DM
 
 <script>
 // ── CONFIG: Dán Web App URL của Google Apps Script vào đây ──
-const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwV99QNWSIHw94g_TEDWBS06eWo5F1Bd2orK24_r0bXpanuApvcP0VHod3wWbO8RLp8Jg/exec';
+const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx3RVYTKFelw3SM9O8BIn-V_1VdHT8MN3x-ITaAY1HLyRYgavOnsZFo2pZ6TpzdOHUIpA/exec';
 
 const QUESTIONS = [
   // D1: Tư duy Chủ nhân vs Nạn nhân
@@ -436,7 +436,7 @@ function sendToGoogleSheets(payload){
   fetch(SHEET_SCRIPT_URL, {
     method:'POST',
     mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain'},
     body: JSON.stringify(payload)
   }).then(()=>{
     if(statusEl){
